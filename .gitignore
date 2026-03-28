@@ -1,0 +1,43 @@
+# Virtual Environment
+orion_env/
+venv/
+env/
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files (optional - remove if you want to include them)
+test_*.py
+*_test.py
+
+# Screenshots
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Audio files
+*.mp3
+*.wav
+
+# Screenshot folder (if created)
+screenshots/
