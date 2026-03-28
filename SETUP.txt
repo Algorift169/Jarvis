@@ -1,0 +1,274 @@
+================================================================================
+                    JARVIS AI ASSISTANT - COMPLETE SETUP GUIDE
+================================================================================
+
+Created by: Israfil
+Repository: https://github.com/Algorift169/Jarvis
+
+================================================================================
+                            SYSTEM REQUIREMENTS
+================================================================================
+
+- Kali Linux / Ubuntu / Debian (or any Linux distribution)
+- Python 3.8 or higher
+- Internet connection (for API and voice recognition)
+- Microphone (for voice input)
+- Speakers/Headphones (for voice output)
+
+================================================================================
+                        STEP 1: INSTALL SYSTEM DEPENDENCIES
+================================================================================
+
+Open a terminal and run these commands:
+
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y python3 python3-pip python3-venv portaudio19-dev python3-pyaudio flac
+sudo apt install -y git wget curl
+
+================================================================================
+                     STEP 2: CLONE THE REPOSITORY
+================================================================================
+
+cd ~/Desktop
+git clone https://github.com/Algorift169/Jarvis.git
+cd Jarvis
+
+================================================================================
+                    STEP 3: CREATE VIRTUAL ENVIRONMENT
+================================================================================
+
+python3 -m venv orion_env
+source orion_env/bin/activate
+
+================================================================================
+                    STEP 4: INSTALL PYTHON PACKAGES
+================================================================================
+
+pip install --upgrade pip
+pip install groq
+pip install speechrecognition
+pip install pyttsx3
+pip install pyautogui
+pip install gtts
+pip install pygame
+pip install psutil
+pip install python-dotenv
+pip install edge-tts
+
+================================================================================
+                    STEP 5: SET UP API KEY
+================================================================================
+
+# Copy the example environment file
+cp .env.example .env
+
+# Edit the .env file with your Groq API key
+nano .env
+
+# Inside .env, replace with your actual key:
+# GROQ_API_KEY=your_actual_groq_api_key_here
+
+# Get your free Groq API key from: https://console.groq.com
+# Sign up → API Keys → Create API Key → Copy the key (starts with gsk_)
+
+================================================================================
+                    STEP 6: TEST THE INSTALLATION
+================================================================================
+
+# Test all imports
+python -c "
+import speech_recognition as sr
+import pyttsx3
+import pyautogui
+from gtts import gTTS
+import pygame
+import psutil
+from dotenv import load_dotenv
+import groq
+import edge_tts
+print('✅ All imports successful!')
+"
+
+# Test microphone
+python -c "
+import speech_recognition as sr
+print('Available microphones:')
+for i, name in enumerate(sr.Microphone().list_microphone_names()):
+    print(f'{i}: {name}')
+"
+
+# Test API connection
+python -c "
+from groq import Groq
+import os
+from dotenv import load_dotenv
+load_dotenv()
+client = Groq(api_key=os.getenv('GROQ_API_KEY'))
+response = client.chat.completions.create(
+    model='llama-3.1-8b-instant',
+    messages=[{'role': 'user', 'content': 'Say hello'}],
+    max_tokens=20
+)
+print('✅ API working! Response:', response.choices[0].message.content)
+"
+
+================================================================================
+                    STEP 7: RUN JARVIS
+================================================================================
+
+# Make sure virtual environment is activated
+source orion_env/bin/activate
+
+# Run JARVIS
+python main.py
+
+================================================================================
+                          HOW TO USE JARVIS
+================================================================================
+
+VOICE MODE (Default):
+--------------------
+1. Say "jarvis" to wake the assistant
+2. Speak your command naturally
+3. JARVIS will respond and execute your command
+
+TEXT MODE:
+----------
+1. Say or type "switch to text" to enable text mode
+2. Type your commands directly
+3. Type "switch to voice" to go back to voice mode
+
+EXIT:
+-----
+- Say "goodbye" or "exit" to quit
+- Or press Ctrl+C
+
+================================================================================
+                        EXAMPLE COMMANDS
+================================================================================
+
+PC CONTROL:
+-----------
+- "open browser"          - Opens Firefox
+- "open notepad"          - Opens text editor
+- "take screenshot"       - Takes screenshot
+- "type Hello World"      - Types text in active window
+
+SYSTEM INFO:
+------------
+- "battery"               - Shows battery status
+- "cpu"                   - Shows CPU usage
+- "memory"                - Shows memory usage
+- "system status"         - Shows overall system status
+
+CONVERSATIONS:
+--------------
+- "what can you do?"      - Lists capabilities
+- "tell me a joke"        - Tells a joke
+- "what time is it?"      - Shows current time
+- "who built you?"        - Shows creator info
+- "my name is Israfil"    - Teaches your name
+
+================================================================================
+                        TROUBLESHOOTING
+================================================================================
+
+ISSUE: Microphone not working
+SOLUTION:
+1. List microphones: python -c "import speech_recognition as sr; print(sr.Microphone().list_microphone_names())"
+2. Edit config.py and set MIC_INDEX to your microphone number
+
+ISSUE: No sound / Voice not working
+SOLUTION:
+1. Check speakers: speaker-test -t wav -c 2
+2. Check audio: aplay /usr/share/sounds/alsa/Noise.wav
+3. Install audio drivers: sudo apt install alsa-utils pulseaudio
+
+ISSUE: API key invalid
+SOLUTION:
+1. Go to https://console.groq.com
+2. Generate a new API key
+3. Update .env file with the new key
+
+ISSUE: PyAudio installation fails
+SOLUTION:
+sudo apt install portaudio19-dev python3-pyaudio
+pip install pyaudio
+
+ISSUE: Edge-TTS voice not working
+SOLUTION:
+pip install edge-tts --upgrade
+
+================================================================================
+                        ADVANCED CONFIGURATION
+================================================================================
+
+Change Voice:
+------------
+Edit tts.py and change the voice parameter:
+- "en-GB-ThomasNeural"   - Deep British male (default)
+- "en-GB-RyanNeural"     - British male (lighter)
+- "en-US-DavisNeural"    - Deep American male
+- "en-US-GuyNeural"      - Professional American male
+
+Change Wake Word:
+----------------
+Edit config.py and change WAKE_WORD variable
+
+Change Voice Speed:
+------------------
+In tts.py, modify the rate parameter:
+- Faster: rate="+10%"
+- Slower: rate="-10%"
+
+================================================================================
+                        PROJECT STRUCTURE
+================================================================================
+
+Jarvis/
+├── main.py              # Main entry point
+├── brain.py             # AI brain with Groq integration
+├── stt.py               # Speech-to-text (voice input)
+├── tts.py               # Text-to-speech (voice output)
+├── commands.py          # PC command execution
+├── pc_controller.py     # PC control functions
+├── input_handler.py     # Voice/Text mode switching
+├── config.py            # Configuration settings
+├── utils.py             # Helper functions
+├── requirements.txt     # Python dependencies
+├── .env                 # Your API keys (not in repo)
+├── .env.example         # Example environment variables
+├── .gitignore           # Git ignore file
+├── README.md            # Project documentation
+└── SETUP.txt            # This file
+
+================================================================================
+                        SUPPORT
+================================================================================
+
+GitHub Repository: https://github.com/Algorift169/Jarvis
+Issues: https://github.com/Algorift169/Jarvis/issues
+Creator: Israfil
+
+================================================================================
+                    QUICK ONE-LINE INSTALL (ALL STEPS)
+================================================================================
+
+# Copy and paste this entire block to install everything at once:
+
+cd ~/Desktop && \
+git clone https://github.com/Algorift169/Jarvis.git && \
+cd Jarvis && \
+python3 -m venv orion_env && \
+source orion_env/bin/activate && \
+pip install --upgrade pip && \
+pip install groq speechrecognition pyttsx3 pyautogui gtts pygame psutil python-dotenv edge-tts && \
+sudo apt update && \
+sudo apt install -y portaudio19-dev python3-pyaudio flac && \
+cp .env.example .env && \
+echo "✅ Setup complete! Now add your Groq API key to .env file and run: python main.py"
+
+================================================================================
+                                END OF SETUP
+================================================================================
