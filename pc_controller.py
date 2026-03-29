@@ -1,7 +1,6 @@
 import subprocess
 import os
 import webbrowser
-import pyautogui
 from datetime import datetime
 from utils import logger
 
@@ -36,6 +35,7 @@ class BasicPCControl:
         if cmd.startswith("type ") or cmd.startswith("write "):
             text = cmd.replace("type ", "").replace("write ", "").strip()
             try:
+                import pyautogui
                 pyautogui.write(text, interval=0.03)
                 return f"Typed: {text}"
             except:
@@ -44,6 +44,7 @@ class BasicPCControl:
         # Screenshot
         if cmd == "screenshot":
             try:
+                import pyautogui
                 desktop = os.path.join(os.path.expanduser("~"), "Desktop")
                 filename = f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
                 filepath = os.path.join(desktop, filename)
