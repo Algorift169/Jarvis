@@ -4,6 +4,7 @@ pyttsx3
 pyaudio
 pyautogui
 gtts
+edge-tts
 pygame
 psutil
 python-dotenv
