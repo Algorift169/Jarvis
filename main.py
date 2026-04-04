@@ -14,6 +14,26 @@ def print_banner():
     print("Built by Israfil")
     print("="*50 + "\n")
 
+def choose_mode():
+    """Let user choose between text and voice mode at startup"""
+    print("How would you like to interact with JARVIS?")
+    print("1. 🎤 VOICE MODE - Speak naturally (wake word: 'jarvis')")
+    print("2. ⌨️ TEXT MODE - Type your commands directly")
+    print("3. 🚀 EXIT")
+    print()
+    
+    while True:
+        choice = input("Enter your choice (1, 2, or 3): ").strip()
+        if choice == "1":
+            return "voice"
+        elif choice == "2":
+            return "text"
+        elif choice == "3":
+            print("\nGoodbye!")
+            sys.exit(0)
+        else:
+            print("Invalid choice. Please enter 1, 2, or 3.")
+
 def main():
     if not GROQ_API_KEY:
         logger.error("Groq API key not found!")
@@ -26,12 +46,19 @@ def main():
     logger.info("Initializing JARVIS AI System...")
     print_banner()
     
+    # Let user choose mode at startup
+    selected_mode = choose_mode()
+    
     try:
         stt = SpeechToText(mic_index=MIC_INDEX)
         tts = TextToSpeech()
         brain = AIBrain()
         input_handler = InputHandler(stt=stt)
         command_processor = CommandProcessor(input_handler, brain, tts)
+        
+        # Set the selected mode
+        input_handler.set_mode(selected_mode)
+        
     except Exception as e:
         logger.error(f"Initialization error: {e}")
         print(f"Error: {e}")
@@ -44,9 +71,13 @@ def main():
     
     print(f"\n🎤 CURRENT MODE: {input_handler.mode.upper()}")
     print(f"💬 To change mode, say or type: 'switch to text' or 'switch to voice'")
-    print(f"🔊 Wake word: '{WAKE_WORD}' (only in voice mode)\n")
     
-    active = False
+    if input_handler.mode == "voice":
+        print(f"🔊 Wake word: '{WAKE_WORD}' (say it to start talking)\n")
+    else:
+        print("⌨️ Just type your commands directly\n")
+    
+    active = True if input_handler.mode == "text" else False  # Text mode is always active, voice needs wake word
     conversation_timeout = 60
     last_activity = time.time()
     
@@ -78,8 +109,9 @@ def main():
                     print()
                 continue
             
-            else:
+            else:  # Voice mode
                 if not active:
+                    # Listen for wake word
                     if stt.listen_for_wake_word(WAKE_WORD):
                         active = True
                         last_activity = time.time()
