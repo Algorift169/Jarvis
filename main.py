@@ -65,7 +65,7 @@ def main():
         return
     
     # Welcome message
-    welcome = "Hello sir, I'm Jarvis, your personal AI assistant built by Israfil. How can I help you today?"
+    welcome = "Hello sir, I'm Jarvis, your personal AI assistant. How can I help you today?"
     tts.speak(welcome)
     logger.info("JARVIS is ready")
     
